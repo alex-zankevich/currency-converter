@@ -1,7 +1,13 @@
 import './App.css';
+import { CurrencyConverterLayout } from './components/CurrencyConverterLayout';
+import { CurrencySelectorProvider } from './contexts/CurrencySelector';
 
 function App() {
-    return <div>Curreny Converter</div>;
+    return (
+        <CurrencySelectorProvider>
+            <CurrencyConverterLayout />
+        </CurrencySelectorProvider>
+    );
 }
 
 export default App;
