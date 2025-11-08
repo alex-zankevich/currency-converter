@@ -55,8 +55,8 @@ export function CurrencyConverterLayout() {
                     onRefresh={refetchRates}
                 />
             </div>
-            <div className="flex flex-col items-start gap-7 sm:flex-row">
-                <Box className="w-full sm:flex-2">
+            <div className="grid grid-rows-2 xs:grid-rows-1 gap-7 sm:grid-cols-2 md:grid-cols-3 md:items-start">
+                <Box className="col-start-1 sm:col-span-1 md:col-span-2">
                     <Label htmlFor="currency-amount">Amount</Label>
                     <NumberInput
                         value={amount}
@@ -70,7 +70,7 @@ export function CurrencyConverterLayout() {
                         <CurrencySelector />
                     </Suspense>
                 </Box>
-                <Box className="min-w-[280px] sm:flex-1">
+                <Box className="sm:col-span-1 md:col-start-3">
                     <ConversionResult
                         resultData={resultData}
                         isLoading={isCurrenciesFetching || isRatesFetching}

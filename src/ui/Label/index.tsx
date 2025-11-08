@@ -4,8 +4,12 @@ import { cn } from '@/lib';
 
 export type LabelProps = ComponentProps<'label'>;
 
-export function Label({ children, className }: LabelProps) {
+export function Label({ children, className, ...props }: LabelProps) {
     const classes = cn('mb-2 block text-xs font-semibold', className);
 
-    return <label className={classes}>{children}</label>;
+    return (
+        <label className={classes} {...props}>
+            {children}
+        </label>
+    );
 }
