@@ -1,8 +1,9 @@
-import { Suspense, lazy, useState } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 
 import { useConversionResult } from '@/hooks/useConversionResult';
 import { useCurrencies } from '@/queries';
 import { useRates } from '@/queries/rates';
+import { useConversionActions, useConversionState } from '@/stores';
 import { useSelectedCurrencies } from '@/stores/currencyStore';
 import { Box } from '@/ui/Box';
 import { NumberInput } from '@/ui/Input';
@@ -17,7 +18,8 @@ import { CurrencyConverterHeader } from './CurrencyConverterHeader';
 const CurrencySelector = lazy(() => import('../CurrencySelector'));
 
 export function CurrencyConverterLayout() {
-    const [amount, setAmount] = useState('');
+    const { amount, lastUpdatedTimestamp } = useConversionState();
+    const { setAmount, setLastUpdatedTimestamp } = useConversionActions();
 
     const { data: currencies, isPending: isCurrenciesFetching } =
         useCurrencies();
@@ -25,7 +27,6 @@ export function CurrencyConverterLayout() {
 
     const {
         data: rates,
-        dataUpdatedAt: lastUpdatedTimestamp,
         isFetching: isRatesFetching,
         refetch: refetchRates,
     } = useRates(selectedCurrencies);
@@ -36,6 +37,12 @@ export function CurrencyConverterLayout() {
         rates?.rates,
         currencies,
     );
+
+    useEffect(() => {
+        if (rates) {
+            setLastUpdatedTimestamp(Date.now());
+        }
+    }, [rates, setLastUpdatedTimestamp]);
 
     if (!isCurrenciesFetching && !currencies) return <OfflineEmptyState />;
 
