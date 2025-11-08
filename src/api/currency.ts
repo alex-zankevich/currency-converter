@@ -13,8 +13,8 @@ export async function getCurrencies(): Promise<Record<string, CurrencyInfo>> {
 }
 
 export async function getRates(
-    sourceCode: string,
-    targetCode: string,
+    sourceCode: string = 'USD',
+    targetCode: string = 'EUR',
     base = sourceCode,
 ): Promise<RateInfo> {
     const params = new URLSearchParams({

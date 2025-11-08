@@ -1,7 +1,11 @@
 import { useState } from 'react';
 
 import SwapIcon from '@/assets/icons/swap.svg?react';
-import { useCurrencySelectorContext } from '@/contexts/CurrencySelector';
+import { useCurrencies } from '@/queries';
+import {
+    useSelectedCurrencies,
+    useUpdateSelectedCurrency,
+} from '@/stores/currencyStore';
 import type { CurrencySelectionState } from '@/types';
 import { Button } from '@/ui/Button';
 import { Label } from '@/ui/Label';
@@ -12,13 +16,10 @@ import { CurrencyItem } from '../CurrencyItem';
 import { SelectCurrencyModalContent } from '../SelectCurrencyModal';
 
 export function CurrencySelector() {
-    const {
-        currencies,
-        isCurrenciesFetching,
-        selectedCurrencies,
-        updateSelectedCurrencies,
-        swapCurrencies,
-    } = useCurrencySelectorContext();
+    const { data: currencies, isPending: isCurrenciesFetching } =
+        useCurrencies();
+    const selectedCurrencies = useSelectedCurrencies();
+    const updateSelectedCurrencies = useUpdateSelectedCurrency();
 
     const [modalMode, setModalMode] = useState<
         keyof CurrencySelectionState | null
@@ -34,6 +35,13 @@ export function CurrencySelector() {
         closeModal();
     }
 
+    function swapCurrencies() {
+        updateSelectedCurrencies({
+            source: selectedCurrencies?.target,
+            target: selectedCurrencies?.source,
+        });
+    }
+
     if (!currencies && !isCurrenciesFetching) return null;
 
     return (
@@ -41,7 +49,7 @@ export function CurrencySelector() {
             <Label className="col-start-1 row-start-1 mb-2 text-xs font-semibold">
                 From
             </Label>
-            {isCurrenciesFetching ? (
+            {isCurrenciesFetching || !selectedCurrencies ? (
                 <Skeleton
                     className="col-start-1 row-start-2 h-[46px] w-full"
                     isLoading={isCurrenciesFetching}
@@ -69,7 +77,7 @@ export function CurrencySelector() {
             <Label className="col-start-3 row-start-1 mb-2 text-xs font-semibold">
                 To
             </Label>
-            {isCurrenciesFetching ? (
+            {isCurrenciesFetching || !selectedCurrencies ? (
                 <Skeleton
                     className="col-start-3 row-start-2 h-[46px] w-full"
                     isLoading={isCurrenciesFetching}
@@ -91,8 +99,9 @@ export function CurrencySelector() {
                 className="max-h-[min(540px,80vh)] w-[440px] sm:max-h-[min(440px,80vh)]"
                 title="Select currency"
             >
-                {modalMode && (
+                {modalMode && selectedCurrencies && (
                     <SelectCurrencyModalContent
+                        currencies={currencies}
                         selectedCurrency={selectedCurrencies[modalMode]}
                         onSelect={onCurrencySelect}
                     />

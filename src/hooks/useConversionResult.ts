@@ -9,7 +9,7 @@ import type {
 
 export function useConversionResult(
     amount: string,
-    selectedCurrencies: CurrencySelectionState,
+    selectedCurrencies?: CurrencySelectionState | null,
     rates?: CurrencyRates,
     currencies?: Record<string, CurrencyInfo>,
 ) {
@@ -17,8 +17,8 @@ export function useConversionResult(
         if (
             !rates ||
             !currencies ||
-            !selectedCurrencies.source ||
-            !selectedCurrencies.target
+            !selectedCurrencies?.source ||
+            !selectedCurrencies?.target
         ) {
             return undefined;
         }

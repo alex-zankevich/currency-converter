@@ -1,23 +1,24 @@
 import { useState } from 'react';
 
 import SearchIcon from '@/assets/icons/search.svg?react';
-import { useCurrencySelectorContext } from '@/contexts/CurrencySelector';
 import { filterCurrencies } from '@/lib';
+import type { CurrencyInfo } from '@/types';
 import { Input } from '@/ui/Input/Input';
 import { Text } from '@/ui/Text';
 
 import { CurrencyList } from '../CurrencyList';
 
 export interface SelectCurrencyModalContentProps {
+    currencies?: Record<string, CurrencyInfo>;
     selectedCurrency: string;
     onSelect(currencyCode: string): void;
 }
 
 export function SelectCurrencyModalContent({
+    currencies = {},
     selectedCurrency,
     onSelect,
 }: SelectCurrencyModalContentProps) {
-    const { currencies = {} } = useCurrencySelectorContext();
     const [search, setSearch] = useState('');
 
     const filteredCurrencies = filterCurrencies(

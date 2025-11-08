@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
-import { useCurrencySelectorContext } from '@/contexts/CurrencySelector';
-import { useRates } from '@/hooks';
 import { useConversionResult } from '@/hooks/useConversionResult';
+import { useCurrencies } from '@/queries';
+import { useRates } from '@/queries/rates';
+import { useSelectedCurrencies } from '@/stores/currencyStore';
 import { Box } from '@/ui/Box';
 import { NumberInput } from '@/ui/Input';
 import { Label } from '@/ui/Label';
@@ -15,16 +16,21 @@ import { CurrencyConverterHeader } from './CurrencyConverterHeader';
 export function CurrencyConverterLayout() {
     const [amount, setAmount] = useState('');
 
-    const { currencies, selectedCurrencies, isCurrenciesFetching } =
-        useCurrencySelectorContext();
+    const { data: currencies, isPending: isCurrenciesFetching } =
+        useCurrencies();
+    const selectedCurrencies = useSelectedCurrencies();
 
-    const { rates, lastUpdatedTimestamp, isRatesFetching, refetchRates } =
-        useRates({ selectedCurrencies });
+    const {
+        data: rates,
+        dataUpdatedAt: lastUpdatedTimestamp,
+        isFetching: isRatesFetching,
+        refetch: refetchRates,
+    } = useRates(selectedCurrencies);
 
     const resultData = useConversionResult(
         amount,
         selectedCurrencies,
-        rates,
+        rates?.rates,
         currencies,
     );
 
