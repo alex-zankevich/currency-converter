@@ -44,19 +44,15 @@ export function CurrencySelector() {
         });
     }
 
-    if (!currencies && !isCurrenciesFetching) return null;
-
     return (
         <div className="grid grid-cols-[minmax(100px,1fr)_auto_minmax(100px,1fr)] grid-rows-[auto_auto] gap-x-3">
             <Label className="col-start-1 row-start-1 mb-2 text-xs font-semibold">
                 From
             </Label>
-            {isCurrenciesFetching || !selectedCurrencies ? (
-                <Skeleton
-                    className="col-start-1 row-start-2 h-[46px] w-full"
-                    isLoading={isCurrenciesFetching}
-                />
-            ) : (
+            <Skeleton
+                className="col-start-1 row-start-2 h-[46px] w-full"
+                isLoading={isCurrenciesFetching}
+            >
                 <Button
                     variant="neutral"
                     className="col-start-1 row-start-2 w-full gap-3 text-sm"
@@ -66,7 +62,7 @@ export function CurrencySelector() {
                         currency={currencies?.[selectedCurrencies.source]}
                     />
                 </Button>
-            )}
+            </Skeleton>
 
             <Button
                 variant="neutral"
@@ -79,12 +75,10 @@ export function CurrencySelector() {
             <Label className="col-start-3 row-start-1 mb-2 text-xs font-semibold">
                 To
             </Label>
-            {isCurrenciesFetching || !selectedCurrencies ? (
-                <Skeleton
-                    className="col-start-3 row-start-2 h-[46px] w-full"
-                    isLoading={isCurrenciesFetching}
-                />
-            ) : (
+            <Skeleton
+                className="col-start-3 row-start-2 h-[46px] w-full"
+                isLoading={isCurrenciesFetching}
+            >
                 <Button
                     variant="neutral"
                     className="col-start-3 row-start-2 w-full gap-3 text-sm"
@@ -94,7 +88,8 @@ export function CurrencySelector() {
                         currency={currencies?.[selectedCurrencies.target]}
                     />
                 </Button>
-            )}
+            </Skeleton>
+
             <Modal
                 isOpen={Boolean(modalMode)}
                 onClose={closeModal}

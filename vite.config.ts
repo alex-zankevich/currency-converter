@@ -5,6 +5,7 @@ import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
+    base: process.env.VITE_BASE_PATH || '/currency-converter',
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
