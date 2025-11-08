@@ -13,7 +13,7 @@ import { Modal } from '@/ui/Modal';
 import { Skeleton } from '@/ui/Skeleton';
 
 import { CurrencyItem } from '../CurrencyItem';
-import { SelectCurrencyModalSkeleton } from '../SelectCurrencyModal';
+import { SelectCurrencyModalSkeleton } from '../SelectCurrencyModal/SelectCurrencyModalSkeleton';
 
 const SelectCurrencyModalContent = lazy(() => import('../SelectCurrencyModal'));
 

@@ -13,7 +13,7 @@ export const ButtonVariants = {
 export interface ButtonProps
     extends PropsWithChildren,
         ComponentProps<'button'> {
-    variant: keyof typeof ButtonVariants;
+    variant?: keyof typeof ButtonVariants;
 }
 
 export function Button({

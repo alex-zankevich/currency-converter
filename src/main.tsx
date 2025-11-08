@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <PersistQueryClientProvider
             client={queryClient}
-            persistOptions={{ persister }}
+            persistOptions={{ persister, maxAge: 5 * 60 * 1000 }}
         >
             <App />
         </PersistQueryClientProvider>
