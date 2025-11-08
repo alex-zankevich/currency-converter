@@ -11,6 +11,7 @@ import { Label } from '@/ui/Label';
 import { ConversionResult } from '../ConversionResult';
 import { ConversionStatus } from '../ConverterStatus';
 import { CurrencySelector } from '../CurrencySelector';
+import { OfflineEmptyState } from '../OfflineEmptyState';
 import { CurrencyConverterHeader } from './CurrencyConverterHeader';
 
 export function CurrencyConverterLayout() {
@@ -33,6 +34,8 @@ export function CurrencyConverterLayout() {
         rates?.rates,
         currencies,
     );
+
+    if (!isCurrenciesFetching && !currencies) return <OfflineEmptyState />;
 
     return (
         <div className="flex max-w-[1000px] flex-col gap-7 p-4">
