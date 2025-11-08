@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 
 import { useConversionResult } from '@/hooks/useConversionResult';
 import { useCurrencies } from '@/queries';
@@ -10,9 +10,11 @@ import { Label } from '@/ui/Label';
 
 import { ConversionResult } from '../ConversionResult';
 import { ConversionStatus } from '../ConverterStatus';
-import { CurrencySelector } from '../CurrencySelector';
+import { CurrencySelectorSekeleton } from '../CurrencySelector/CurrencySelectorSkeleton';
 import { OfflineEmptyState } from '../OfflineEmptyState';
 import { CurrencyConverterHeader } from './CurrencyConverterHeader';
+
+const CurrencySelector = lazy(() => import('../CurrencySelector'));
 
 export function CurrencyConverterLayout() {
     const [amount, setAmount] = useState('');
@@ -56,7 +58,10 @@ export function CurrencyConverterLayout() {
                         className="mb-6 w-full py-3 text-center"
                         placeholder="Enter amount"
                     />
-                    <CurrencySelector />
+
+                    <Suspense fallback={<CurrencySelectorSekeleton />}>
+                        <CurrencySelector />
+                    </Suspense>
                 </Box>
                 <Box className="min-w-[280px] sm:flex-1">
                     <ConversionResult

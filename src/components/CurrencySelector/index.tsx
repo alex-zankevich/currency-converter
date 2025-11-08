@@ -1,6 +1,7 @@
 import { Suspense, lazy, useState } from 'react';
 
 import SwapIcon from '@/assets/icons/swap.svg?react';
+import { useIsOnline } from '@/hooks';
 import { useCurrencies } from '@/queries';
 import {
     useSelectedCurrencies,
@@ -10,10 +11,10 @@ import type { CurrencySelectionState } from '@/types';
 import { Button } from '@/ui/Button';
 import { Label } from '@/ui/Label';
 import { Modal } from '@/ui/Modal';
-import { Skeleton } from '@/ui/Skeleton';
 
 import { CurrencyItem } from '../CurrencyItem';
 import { SelectCurrencyModalSkeleton } from '../SelectCurrencyModal/SelectCurrencyModalSkeleton';
+import { CurrencySelectorSekeleton } from './CurrencySelectorSkeleton';
 
 const SelectCurrencyModalContent = lazy(() => import('../SelectCurrencyModal'));
 
@@ -22,6 +23,8 @@ export function CurrencySelector() {
         useCurrencies();
     const selectedCurrencies = useSelectedCurrencies();
     const updateSelectedCurrencies = useUpdateSelectedCurrency();
+
+    const isOnline = useIsOnline();
 
     const [modalMode, setModalMode] = useState<
         keyof CurrencySelectionState | null
@@ -44,51 +47,46 @@ export function CurrencySelector() {
         });
     }
 
+    if (isCurrenciesFetching) return <CurrencySelectorSekeleton />;
+
     return (
         <div className="grid grid-cols-[minmax(100px,1fr)_auto_minmax(100px,1fr)] grid-rows-[auto_auto] gap-x-3">
             <Label className="col-start-1 row-start-1 mb-2 text-xs font-semibold">
                 From
             </Label>
-            <Skeleton
-                className="col-start-1 row-start-2 h-[46px] w-full"
-                isLoading={isCurrenciesFetching}
+            <Button
+                variant="neutral"
+                className="col-start-1 row-start-2 w-full gap-3 text-sm"
+                onClick={() => setModalMode('source')}
+                disabled={!isOnline}
             >
-                <Button
-                    variant="neutral"
-                    className="col-start-1 row-start-2 w-full gap-3 text-sm"
-                    onClick={() => setModalMode('source')}
-                >
-                    <CurrencyItem
-                        currency={currencies?.[selectedCurrencies.source]}
-                    />
-                </Button>
-            </Skeleton>
+                <CurrencyItem
+                    currency={currencies?.[selectedCurrencies.source]}
+                />
+            </Button>
 
             <Button
                 variant="neutral"
                 className="col-start-2 row-start-2 mb-0.5 self-end border-0 bg-transparent px-3.5 py-3.5"
                 onClick={swapCurrencies}
+                disabled={!isOnline}
             >
-                <SwapIcon />
+                <SwapIcon className="opacity-inherit" />
             </Button>
 
             <Label className="col-start-3 row-start-1 mb-2 text-xs font-semibold">
                 To
             </Label>
-            <Skeleton
-                className="col-start-3 row-start-2 h-[46px] w-full"
-                isLoading={isCurrenciesFetching}
+            <Button
+                variant="neutral"
+                className="col-start-3 row-start-2 w-full gap-3 text-sm"
+                onClick={() => setModalMode('target')}
+                disabled={!isOnline}
             >
-                <Button
-                    variant="neutral"
-                    className="col-start-3 row-start-2 w-full gap-3 text-sm"
-                    onClick={() => setModalMode('target')}
-                >
-                    <CurrencyItem
-                        currency={currencies?.[selectedCurrencies.target]}
-                    />
-                </Button>
-            </Skeleton>
+                <CurrencyItem
+                    currency={currencies?.[selectedCurrencies.target]}
+                />
+            </Button>
 
             <Modal
                 isOpen={Boolean(modalMode)}
@@ -109,3 +107,5 @@ export function CurrencySelector() {
         </div>
     );
 }
+
+export default CurrencySelector;
