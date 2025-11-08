@@ -11,10 +11,10 @@ export interface CurrencyListProps {
 }
 
 export function CurrencyList({ items, onSelect, selected }: CurrencyListProps) {
-    const { focusedIndex, itemRefs } = useListKeyboardNav(
-        items.length,
-        handleKeyboardSelect,
-    );
+    const { focusedIndex, itemRefs } = useListKeyboardNav({
+        itemsCount: items.length,
+        onSelect: handleKeyboardSelect,
+    });
 
     function handleKeyboardSelect(index: number) {
         if (items[index]) {

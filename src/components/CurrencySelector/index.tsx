@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 
 import SwapIcon from '@/assets/icons/swap.svg?react';
 import { useCurrencies } from '@/queries';
@@ -13,7 +13,9 @@ import { Modal } from '@/ui/Modal';
 import { Skeleton } from '@/ui/Skeleton';
 
 import { CurrencyItem } from '../CurrencyItem';
-import { SelectCurrencyModalContent } from '../SelectCurrencyModal';
+import { SelectCurrencyModalSkeleton } from '../SelectCurrencyModal';
+
+const SelectCurrencyModalContent = lazy(() => import('../SelectCurrencyModal'));
 
 export function CurrencySelector() {
     const { data: currencies, isPending: isCurrenciesFetching } =
@@ -100,11 +102,13 @@ export function CurrencySelector() {
                 title="Select currency"
             >
                 {modalMode && selectedCurrencies && (
-                    <SelectCurrencyModalContent
-                        currencies={currencies}
-                        selectedCurrency={selectedCurrencies[modalMode]}
-                        onSelect={onCurrencySelect}
-                    />
+                    <Suspense fallback={<SelectCurrencyModalSkeleton />}>
+                        <SelectCurrencyModalContent
+                            currencies={currencies}
+                            selectedCurrency={selectedCurrencies[modalMode]}
+                            onSelect={onCurrencySelect}
+                        />
+                    </Suspense>
                 )}
             </Modal>
         </div>
