@@ -50,43 +50,43 @@ export function CurrencySelector() {
     if (isCurrenciesFetching) return <CurrencySelectorSekeleton />;
 
     return (
-        <div className="grid grid-cols-[minmax(100px,1fr)_auto_minmax(100px,1fr)] grid-rows-[auto_auto] gap-x-3">
-            <Label className="col-start-1 row-start-1 mb-2 text-xs font-semibold">
-                From
-            </Label>
-            <Button
-                variant="neutral"
-                className="col-start-1 row-start-2 w-full gap-3 text-sm"
-                onClick={() => setModalMode('source')}
-                disabled={!isOnline}
-            >
-                <CurrencyItem
-                    currency={currencies?.[selectedCurrencies.source]}
-                />
-            </Button>
+        <div className="flex flex-col gap-3 md:flex-row">
+            <div className="flex-1">
+                <Label className="mb-2 text-xs font-semibold">From</Label>
+                <Button
+                    variant="neutral"
+                    className="w-full gap-3 text-sm"
+                    onClick={() => setModalMode('source')}
+                    disabled={!isOnline}
+                >
+                    <CurrencyItem
+                        currency={currencies?.[selectedCurrencies.source]}
+                    />
+                </Button>
+            </div>
 
             <Button
                 variant="neutral"
-                className="col-start-2 row-start-2 mb-0.5 self-end border-0 bg-transparent px-3.5 py-3.5"
+                className="mb-0.5 rotate-90 self-center border-0 bg-transparent px-3.5 py-3.5 md:rotate-0 md:self-end"
                 onClick={swapCurrencies}
                 disabled={!isOnline}
             >
                 <SwapIcon className="opacity-inherit" />
             </Button>
 
-            <Label className="col-start-3 row-start-1 mb-2 text-xs font-semibold">
-                To
-            </Label>
-            <Button
-                variant="neutral"
-                className="col-start-3 row-start-2 w-full gap-3 text-sm"
-                onClick={() => setModalMode('target')}
-                disabled={!isOnline}
-            >
-                <CurrencyItem
-                    currency={currencies?.[selectedCurrencies.target]}
-                />
-            </Button>
+            <div className="flex-1">
+                <Label className="mb-2 text-xs font-semibold">To</Label>
+                <Button
+                    variant="neutral"
+                    className="w-full gap-3 text-sm"
+                    onClick={() => setModalMode('target')}
+                    disabled={!isOnline}
+                >
+                    <CurrencyItem
+                        currency={currencies?.[selectedCurrencies.target]}
+                    />
+                </Button>
+            </div>
 
             <Modal
                 isOpen={Boolean(modalMode)}
