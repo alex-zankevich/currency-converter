@@ -35,7 +35,7 @@ export function CurrencyConverterLayout() {
     const resultData = useConversionResult(
         amount,
         selectedCurrencies,
-        rates?.rates,
+        rates,
         currencies,
     );
 

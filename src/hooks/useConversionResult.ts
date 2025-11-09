@@ -1,37 +1,31 @@
 import { useMemo } from 'react';
 
-import { calculateConversionResult } from '@/lib';
-import type {
-    CurrencyInfo,
-    CurrencyRates,
-    CurrencySelectionState,
-} from '@/types';
+import { getConversionResultData } from '@/lib';
+import type { CurrencyInfo, CurrencySelectionState, RateInfo } from '@/types';
+
+import { useDebounce } from './useDebounce';
+
+const AMOUNT_CHANGE_DEBOUNCE = 250;
 
 export function useConversionResult(
     amount: string,
     selectedCurrencies?: CurrencySelectionState,
-    rates?: CurrencyRates,
+    rates?: RateInfo,
     currencies?: Record<string, CurrencyInfo>,
 ) {
+    const debouncedAmount = useDebounce(amount, AMOUNT_CHANGE_DEBOUNCE);
+
     return useMemo(() => {
-        if (
-            !rates ||
-            !currencies ||
-            !selectedCurrencies?.source ||
-            !selectedCurrencies?.target
-        ) {
-            return undefined;
-        }
+        if (!rates || !currencies || !selectedCurrencies) return;
 
         const targetCurrency = currencies[selectedCurrencies.target];
         const targetCurrencySymbol = targetCurrency?.symbol || '';
 
-        return calculateConversionResult(
-            amount,
+        return getConversionResultData(
+            debouncedAmount,
             rates,
-            selectedCurrencies.source,
-            selectedCurrencies.target,
+            selectedCurrencies,
             targetCurrencySymbol,
         );
-    }, [amount, rates, currencies, selectedCurrencies]);
+    }, [debouncedAmount, rates, currencies, selectedCurrencies]);
 }

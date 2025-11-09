@@ -38,5 +38,3 @@ export const useSelectedCurrencies = () =>
 
 export const useUpdateSelectedCurrency = () =>
     useCurrencyStore((state) => state.updateSelectedCurrencies);
-
-

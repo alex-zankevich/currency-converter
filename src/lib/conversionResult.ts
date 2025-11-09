@@ -1,4 +1,10 @@
-import type { ConversionResultData } from '@/types';
+import type {
+    ConversionResultData,
+    CurrencySelectionState,
+    RateInfo,
+} from '@/types';
+
+import { calculateRates } from './conversion';
 
 export const MAX_DECIMAL_DIGITS = 6;
 
@@ -34,21 +40,24 @@ export function getFormatedExchangeRate(
     return `1 ${source} = ${truncDecimalPart(rate)} ${target}`;
 }
 
-export function calculateConversionResult(
+export function getConversionResultData(
     amount: string,
-    rates: Record<string, number> | undefined,
-    sourceCurrencyCode: string,
-    targetCurrencyCode: string,
+    { rates = {} }: RateInfo,
+    { source, target }: CurrencySelectionState,
     targetCurrencySymbol: string,
 ): ConversionResultData | undefined {
-    if (!rates || !sourceCurrencyCode || !targetCurrencyCode) {
-        return undefined;
-    }
+    const rateBaseToSource = rates[source];
+    const rateBaseToTarget = rates[target];
 
+    if (!rateBaseToSource || !rateBaseToTarget || rateBaseToSource === 0)
+        return;
+
+    const { exchangeRate, inverseRate } = calculateRates(
+        rateBaseToSource,
+        rateBaseToTarget,
+    );
     const sourceAmount = convertAmountToNumber(amount);
-    const exchangeRate = rates[targetCurrencyCode] || 0;
     const resultAmount = sourceAmount * exchangeRate;
-    const inverseRate = exchangeRate ? 1 / exchangeRate : 0;
 
     return {
         targetSymbol: targetCurrencySymbol,
@@ -56,7 +65,7 @@ export function calculateConversionResult(
         resultAmount,
         exchangeRate,
         inverseRate,
-        sourceCurrencyCode,
-        targetCurrencyCode,
+        sourceCurrencyCode: source,
+        targetCurrencyCode: target,
     };
 }
