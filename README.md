@@ -1,75 +1,129 @@
-# React + TypeScript + Vite
+# Currency Converter
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This single-page application provides real-time currency conversion with offline support, and a responsive design.
 
-Currently, two official plugins are available:
+## 🌐 Live Demo Links
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Main**: [https://www.alexzankevich.com/](https://www.alexzankevich.com/)
+- **Vercel**: [https://currency-converter-rosy-five.vercel.app/](https://currency-converter-rosy-five.vercel.app/)
 
-## React Compiler
+## 🚀 Quick Start
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Installation & Development
 
-Note: This will impact Vite dev & build performances.
+1. Clone the repository:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone https://github.com/alex-zankevich/currency-converter.git
+cd currency-converter
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install dependencies:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build locally
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier and fix ESLint issues
+
+## 🏗️ Project Architecture
+
+### Tech Stack
+
+#### Core Technologies
+
+- **React 19** - Latest React version with improved performance via React Compiler, eliminating the need for manual optimizations like `React.memo`, `useMemo`, and `useCallback`
+- **TypeScript** - Type safety and enhanced developer experience
+- **Tailwind CSS v4** - Utility-first CSS framework that works well for implementing the provided design
+- **Vite** - Fast build tool with excellent developer experience
+
+#### State Management & Data Fetching
+
+- **Zustand** - Lightweight state management solution that serves as a good alternative to React Context API. Alternatives like Redux/MobX would be overkill for this application. It also supports persisting state in `localStorage`, eliminating the need for a custom solution.
+
+- **TanStack Query (React Query)** - Powerful library that simplifies API communication and state management using its caching mechanism. While the package size is not minimal for this application, the benefits and convenience it provides outweigh any drawbacks. It also supports persisting state in `localStorage` via `@tanstack/react-query-persist-client`.
+
+#### Utility Libraries
+
+- **clsx + tailwind-merge** - Efficient className management
+- **Intl.NumberFormat** - Localisation for numbers
+
+### Project Structure
+
+```
+currency-converter/
+├── src/
+│   ├── api/            # API integration (fxratesapi.com)
+│   ├── assets/         # SVG icons
+│   ├── components/     # Core app building blocks
+│   ├── hooks/          # Custom reusable hooks
+│   ├── lib/            # Utility functions (conversion, formatting)
+│   ├── queries/        # TanStack Queries
+│   ├── stores/         # Zustand state management
+│   ├── types/          # TypeScript definitions
+│   ├── ui/             # Reusable UI components
+│   └── main.tsx        # App entry point
+└── package.json        # Dependencies and scripts
+```
+
+### Key Architecture Decisions
+
+#### 1. API Choice: fxratesapi.com
+
+- Provides all necessary information (currency list with name, code, symbol data; rates data with ability to set base currency) to implement requirements
+- Supports base currency selection for accurate conversions
+- Does not require an API key for accessing necessary free endpoints
+
+#### 2. Caching Strategy
+
+- **TanStack Query** handles caching with persistence to localStorage
+- Cache invalidation: 5 minutes
+- Background refetch when online
+- Stale-while-revalidate pattern for instant UI updates
+
+#### 3. Conversion Formula
+
+When API uses a base currency (e.g., USD), conversion between any two currencies follows:
+
+```
+rate(A → B) = rate(Base → B) / rate(Base → A)
+```
+
+#### 4. Performance Optimizations
+
+- **Debouncing**: 250ms debounce on input and refresh rates button to prevent excessive API calls
+- **Memoization**: `useMemo` for some expensive calculations (React Compiler handles most memoization)
+- **Code Splitting**: Lazy loading for some components using `React.lazy` (e.g., currency selector modal content)
+
+#### 5. State Management Strategy
+
+- **Zustand** for application state
+- **TanStack Query** for server data state
+- **localStorage** for persistence (last used values, cached rates and currencies)
+
+#### 6. Error Handling
+
+- Network errors show messages via toast notifications
+- Offline state gracefully falls back to cached data
+- Failed conversions display error message
+- `ErrorBoundary` for any unexpected application errors
+
+## 📝 Code Quality & Configuration
+
+- **Strict TypeScript** with full type coverage for API responses and domain logic
+- **ESLint + Prettier** for code formatting and linting
+- **Clean Code Principles** following SOLID, KISS, DRY, and YAGNI

@@ -26,7 +26,10 @@ export function ConversionResult({
     return (
         <div>
             <Text variant="heading">Conversion result</Text>
-            <div className="flex flex-col items-center gap-1 truncate border-b border-neutral-200 py-6">
+            <div
+                className="flex flex-col items-center gap-1 truncate border-b border-neutral-200 py-6"
+                title={displayData.resultAmount}
+            >
                 <Skeleton className="h-8 w-30" isLoading={isLoading}>
                     <Text className="max-w-full text-2xl font-bold" truncate>
                         {displayData.resultAmount}

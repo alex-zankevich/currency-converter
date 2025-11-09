@@ -4,41 +4,8 @@ import type {
     RateInfo,
 } from '@/types';
 
+import { CurrencyFormatter } from './CurrencyFormatter';
 import { calculateRates } from './conversion';
-
-export const MAX_DECIMAL_DIGITS = 6;
-
-export function convertAmountToNumber(amount: string) {
-    const amountNumber = parseFloat(amount.replace(',', '.'));
-
-    if (isNaN(amountNumber)) return 0;
-
-    return amountNumber;
-}
-
-export function truncDecimalPart(
-    value: number | string = 0,
-    maxDecimals = MAX_DECIMAL_DIGITS,
-) {
-    return Number(value).toFixed(maxDecimals);
-}
-
-export function formatNumber(
-    value: number | string = 0,
-    maxDecimals = MAX_DECIMAL_DIGITS,
-) {
-    return parseFloat(truncDecimalPart(value, maxDecimals));
-}
-
-export function getFormatedExchangeRate(
-    rate: number,
-    source?: string,
-    target?: string,
-) {
-    if (!source || !target) return;
-
-    return `1 ${source} = ${truncDecimalPart(rate)} ${target}`;
-}
 
 export function getConversionResultData(
     amount: string,
@@ -56,7 +23,7 @@ export function getConversionResultData(
         rateBaseToSource,
         rateBaseToTarget,
     );
-    const sourceAmount = convertAmountToNumber(amount);
+    const sourceAmount = CurrencyFormatter.parseString(amount);
     const resultAmount = sourceAmount * exchangeRate;
 
     return {
@@ -70,10 +37,31 @@ export function getConversionResultData(
     };
 }
 
+export function getFormatedExchangeRate(
+    rate: number,
+    source?: string,
+    target?: string,
+) {
+    if (!source || !target) return;
+
+    const formatter = new CurrencyFormatter();
+
+    return `1 ${source} = ${formatter.format(rate, target)}`;
+}
+
 export function getResultDisplayData(resultData?: ConversionResultData) {
+    const amountFormatter = new CurrencyFormatter({ minimumFractionDigits: 0 });
+
     return {
-        resultAmount: `${resultData?.targetSymbol} ${formatNumber(resultData?.resultAmount)}`,
-        sourceAmount: `${resultData?.sourceAmount} ${resultData?.sourceCurrencyCode} =`,
+        resultAmount: amountFormatter.format(
+            resultData?.resultAmount,
+            resultData?.targetSymbol,
+            true,
+        ),
+        sourceAmount: amountFormatter.format(
+            resultData?.sourceAmount,
+            `${resultData?.sourceCurrencyCode} =`,
+        ),
         exchangeRate:
             resultData &&
             getFormatedExchangeRate(

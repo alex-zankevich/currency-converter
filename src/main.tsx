@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 
 import { persister, queryClient } from '@/queries';
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
             client={queryClient}
             persistOptions={{ persister, maxAge: 5 * 60 * 1000 }}
         >
+            <ReactQueryDevtools initialIsOpen={false} />
             <ErrorBoundary fallback={<ErrorPage />}>
                 <App />
             </ErrorBoundary>

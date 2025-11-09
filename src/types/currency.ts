@@ -1,11 +1,7 @@
 export interface CurrencyInfo {
     code: string;
-    decimal_digits: number;
     name: string;
-    name_plural: string;
-    rounding: number;
     symbol: string;
-    symbol_native: string;
 }
 
 export type CurrencyRates = Record<string, number>;
