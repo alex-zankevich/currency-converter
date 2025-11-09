@@ -3,8 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getRates } from '@/api';
 import type { CurrencySelectionState, RateInfo } from '@/types';
 
-
-export function useRates(selectedCurrencies: CurrencySelectionState | null) {
+export function useRates(selectedCurrencies: CurrencySelectionState) {
     return useQuery<RateInfo>({
         queryKey: ['rates', selectedCurrencies],
         queryFn: async () =>

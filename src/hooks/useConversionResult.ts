@@ -9,7 +9,7 @@ import type {
 
 export function useConversionResult(
     amount: string,
-    selectedCurrencies?: CurrencySelectionState | null,
+    selectedCurrencies?: CurrencySelectionState,
     rates?: CurrencyRates,
     currencies?: Record<string, CurrencyInfo>,
 ) {

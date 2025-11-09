@@ -1,5 +1,6 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy } from 'react';
 
+import { useLastUpdatedTimestamp } from '@/hooks';
 import { useConversionResult } from '@/hooks/useConversionResult';
 import { useCurrencies } from '@/queries';
 import { useRates } from '@/queries/rates';
@@ -18,8 +19,8 @@ import { CurrencyConverterHeader } from './CurrencyConverterHeader';
 const CurrencySelector = lazy(() => import('../CurrencySelector'));
 
 export function CurrencyConverterLayout() {
-    const { amount, lastUpdatedTimestamp } = useConversionState();
-    const { setAmount, setLastUpdatedTimestamp } = useConversionActions();
+    const { amount } = useConversionState();
+    const { setAmount } = useConversionActions();
 
     const { data: currencies, isPending: isCurrenciesFetching } =
         useCurrencies();
@@ -38,11 +39,7 @@ export function CurrencyConverterLayout() {
         currencies,
     );
 
-    useEffect(() => {
-        if (rates) {
-            setLastUpdatedTimestamp(Date.now());
-        }
-    }, [rates, setLastUpdatedTimestamp]);
+    const lastUpdatedTimestamp = useLastUpdatedTimestamp(rates);
 
     if (!isCurrenciesFetching && !currencies) return <OfflineEmptyState />;
 
@@ -55,7 +52,7 @@ export function CurrencyConverterLayout() {
                     onRefresh={refetchRates}
                 />
             </div>
-            <div className="grid grid-rows-2 xs:grid-rows-1 gap-7 sm:grid-cols-2 md:grid-cols-3 md:items-start">
+            <div className="xs:grid-rows-1 grid grid-rows-2 gap-7 sm:grid-cols-2 md:grid-cols-3 md:items-start">
                 <Box className="col-start-1 sm:col-span-1 md:col-span-2">
                     <Label htmlFor="currency-amount">Amount</Label>
                     <NumberInput
