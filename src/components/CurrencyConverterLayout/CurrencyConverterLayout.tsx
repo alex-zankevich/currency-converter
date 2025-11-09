@@ -52,7 +52,7 @@ export function CurrencyConverterLayout() {
                     onRefresh={refetchRates}
                 />
             </div>
-            <div className="xs:grid-rows-1 grid grid-rows-2 gap-7 sm:grid-cols-2 md:grid-cols-3 md:items-start">
+            <div className="xs:grid-rows-1 grid grid-rows-[auto_auto] gap-7 sm:grid-cols-2 md:grid-cols-3 md:items-start">
                 <Box className="col-start-1 sm:col-span-1 md:col-span-2">
                     <Label htmlFor="currency-amount">Amount</Label>
                     <NumberInput

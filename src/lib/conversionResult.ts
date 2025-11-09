@@ -69,3 +69,24 @@ export function getConversionResultData(
         targetCurrencyCode: target,
     };
 }
+
+export function getResultDisplayData(resultData?: ConversionResultData) {
+    return {
+        resultAmount: `${resultData?.targetSymbol} ${formatNumber(resultData?.resultAmount)}`,
+        sourceAmount: `${resultData?.sourceAmount} ${resultData?.sourceCurrencyCode} =`,
+        exchangeRate:
+            resultData &&
+            getFormatedExchangeRate(
+                resultData.exchangeRate,
+                resultData.sourceCurrencyCode,
+                resultData.targetCurrencyCode,
+            ),
+        inverseRate:
+            resultData &&
+            getFormatedExchangeRate(
+                resultData.inverseRate,
+                resultData.targetCurrencyCode,
+                resultData.sourceCurrencyCode,
+            ),
+    };
+}

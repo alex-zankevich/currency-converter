@@ -1,7 +1,11 @@
-import { formatNumber, getFormatedExchangeRate } from '@/lib';
+import { useMemo } from 'react';
+
+import { getResultDisplayData } from '@/lib';
 import type { ConversionResultData } from '@/types';
 import { Skeleton } from '@/ui/Skeleton';
 import { Text } from '@/ui/Text';
+
+import { FailedResultInfo } from './FailedResultInfo';
 
 export interface ConversionResultProps {
     resultData?: ConversionResultData;
@@ -12,21 +16,24 @@ export function ConversionResult({
     resultData,
     isLoading,
 }: ConversionResultProps) {
+    const displayData = useMemo(
+        () => getResultDisplayData(resultData),
+        [resultData],
+    );
+
+    if (!resultData && !isLoading) return <FailedResultInfo />;
+
     return (
         <div>
             <Text variant="heading">Conversion result</Text>
             <div className="flex flex-col items-center gap-1 truncate border-b border-neutral-200 py-6">
                 <Skeleton className="h-8 w-30" isLoading={isLoading}>
                     <Text className="max-w-full text-2xl font-bold" truncate>
-                        {resultData?.targetSymbol}{' '}
-                        {formatNumber(resultData?.resultAmount)}
+                        {displayData.resultAmount}
                     </Text>
                 </Skeleton>
                 <Skeleton className="h-4 w-20" isLoading={isLoading}>
-                    <Text variant="small">
-                        {resultData?.sourceAmount}{' '}
-                        {resultData?.sourceCurrencyCode} =
-                    </Text>
+                    <Text variant="small">{displayData.sourceAmount}</Text>
                 </Skeleton>
             </div>
             <div className="border-b border-neutral-200 py-6">
@@ -36,12 +43,7 @@ export function ConversionResult({
                     </Text>
                     <Skeleton className="h-4 w-[50%]" isLoading={isLoading}>
                         <Text variant="heading" className="text-xs" truncate>
-                            {resultData &&
-                                getFormatedExchangeRate(
-                                    resultData.exchangeRate,
-                                    resultData.sourceCurrencyCode,
-                                    resultData.targetCurrencyCode,
-                                )}
+                            {displayData.exchangeRate}
                         </Text>
                     </Skeleton>
                 </div>
@@ -52,12 +54,7 @@ export function ConversionResult({
                     </Text>
                     <Skeleton className="h-4 w-[50%]" isLoading={isLoading}>
                         <Text variant="heading" className="text-xs" truncate>
-                            {resultData &&
-                                getFormatedExchangeRate(
-                                    resultData.inverseRate,
-                                    resultData.targetCurrencyCode,
-                                    resultData.sourceCurrencyCode,
-                                )}
+                            {displayData.inverseRate}
                         </Text>
                     </Skeleton>
                 </div>
