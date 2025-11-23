@@ -4,23 +4,21 @@ import { useLastUpdatedTimestamp } from '@/hooks';
 import { useConversionResult } from '@/hooks/useConversionResult';
 import { useCurrencies } from '@/queries';
 import { useRates } from '@/queries/rates';
-import { useConversionActions, useConversionState } from '@/stores';
+import { useConversionState } from '@/stores';
 import { useSelectedCurrencies } from '@/stores/currencyStore';
 import { Box } from '@/ui/Box';
-import { NumberInput } from '@/ui/Input';
-import { Label } from '@/ui/Label';
 
 import { ConversionResult } from '../ConversionResult';
 import { ConversionStatus } from '../ConverterStatus';
 import { CurrencySelectorSekeleton } from '../CurrencySelector/CurrencySelectorSkeleton';
 import { OfflineEmptyState } from '../OfflineEmptyState';
+import { CurrencyAmount } from './CurrencyAmount';
 import { CurrencyConverterHeader } from './CurrencyConverterHeader';
 
 const CurrencySelector = lazy(() => import('../CurrencySelector'));
 
 export function CurrencyConverterLayout() {
     const { amount } = useConversionState();
-    const { setAmount } = useConversionActions();
 
     const { data: currencies, isPending: isCurrenciesFetching } =
         useCurrencies();
@@ -54,14 +52,7 @@ export function CurrencyConverterLayout() {
             </div>
             <div className="xs:grid-rows-1 grid grid-rows-[auto_auto] gap-7 sm:grid-cols-2 md:grid-cols-3 md:items-start">
                 <Box className="col-start-1 sm:col-span-1 md:col-span-2">
-                    <Label htmlFor="currency-amount">Amount</Label>
-                    <NumberInput
-                        value={amount}
-                        onChange={(value) => setAmount(value)}
-                        id="currency-amount"
-                        className="mb-6 w-full py-3 text-center"
-                        placeholder="Enter amount"
-                    />
+                    <CurrencyAmount />
 
                     <Suspense fallback={<CurrencySelectorSekeleton />}>
                         <CurrencySelector />
