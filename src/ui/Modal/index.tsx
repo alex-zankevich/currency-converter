@@ -6,6 +6,8 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 
+import { cn } from 'tailwind-variants';
+
 import CrossIcon from '@/assets/icons/cross.svg?react';
 
 import { Button } from '../Button';
@@ -45,17 +47,16 @@ export function Modal({
     return createPortal(
         <dialog
             ref={dialogRef}
-            className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl p-4 pt-0 backdrop:bg-black/50 ${className}`}
+            className={cn(
+                'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl p-4 pt-0 backdrop:bg-black/50',
+                className,
+            )}
             onCancel={close}
             onClose={close}
         >
             <div className="sticky top-0 flex items-center justify-between bg-inherit pt-4 pb-2">
                 <h2 className="font-semibold">{title}</h2>
-                <Button
-                    variant="neutral"
-                    className="border-0 bg-transparent px-2 py-2"
-                    onClick={close}
-                >
+                <Button variant="text" className="px-2 py-2" onClick={close}>
                     <CrossIcon />
                 </Button>
             </div>

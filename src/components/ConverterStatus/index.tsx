@@ -43,11 +43,11 @@ export function ConversionStatus({
     return (
         <>
             {isOnline ? (
-                <Button variant="green">
+                <Button variant="success">
                     <OnlineIcon /> Online
                 </Button>
             ) : (
-                <Button variant="red">
+                <Button variant="error">
                     <OfflineIcon /> Offline
                 </Button>
             )}
@@ -58,7 +58,7 @@ export function ConversionStatus({
             </Text>
 
             <Button
-                variant="blue"
+                variant="primary"
                 onClick={debouncedRefresh}
                 disabled={!isOnline}
                 title={getRefetchButtonTitle(isOnline)}

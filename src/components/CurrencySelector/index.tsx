@@ -66,8 +66,8 @@ export function CurrencySelector() {
             </div>
 
             <Button
-                variant="neutral"
-                className="mb-0.5 rotate-90 self-center border-0 bg-transparent px-3.5 py-3.5 md:rotate-0 md:self-end"
+                variant="text"
+                className="mb-0.5 rotate-90 self-center px-3.5 py-3.5 md:rotate-0 md:self-end"
                 onClick={swapCurrencies}
                 disabled={!isOnline}
             >

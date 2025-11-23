@@ -31,8 +31,9 @@ export function Toast({ toast, onClose }: ToastProps) {
                 {toast.message}
             </Text>
             <Button
+                variant="text"
                 onClick={onClose}
-                className="border-0 bg-transparent px-1 py-1 text-inherit enabled:hover:bg-transparent"
+                className="px-1 py-1 text-inherit enabled:hover:bg-transparent"
             >
                 <CrossIcon fill="currentColor" />
             </Button>

@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 
+import { cn } from 'tailwind-variants';
+
 export interface SkeletonProps {
     isLoading?: boolean;
     className?: string;
@@ -15,7 +17,10 @@ export function Skeleton({
 
     return (
         <div
-            className={`h-2 animate-pulse rounded bg-neutral-100 ${className}`}
+            className={cn(
+                'h-2 animate-pulse rounded bg-neutral-100',
+                className,
+            )}
         />
     );
 }

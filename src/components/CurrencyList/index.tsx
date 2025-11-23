@@ -1,5 +1,6 @@
 import TickIcon from '@/assets/icons/tick.svg?react';
 import { useListKeyboardNav } from '@/hooks';
+import { cn } from '@/lib';
 import type { CurrencyInfo } from '@/types';
 
 import { CurrencyItem } from '../CurrencyItem';
@@ -32,7 +33,13 @@ export function CurrencyList({ items, onSelect, selected }: CurrencyListProps) {
                             if (el) itemRefs.current[index] = el;
                         }}
                         onClick={() => onSelect(code)}
-                        className={`flex items-center gap-3 rounded-lg px-2 py-3 text-neutral-700 transition-colors duration-200 hover:bg-neutral-100 ${selected === code || focusedIndex === index ? 'bg-neutral-100' : 'bg-transparent'}`}
+                        className={cn(
+                            'flex items-center gap-3 rounded-lg px-2 py-3 text-neutral-700 transition-colors duration-200 hover:bg-neutral-100',
+                            {
+                                'bg-neutral-100':
+                                    selected === code || focusedIndex === index,
+                            },
+                        )}
                     >
                         <CurrencyItem
                             currency={{
